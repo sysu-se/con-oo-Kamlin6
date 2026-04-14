@@ -1,5 +1,5 @@
 <script>
-	import { userGrid } from '@sudoku/stores/grid';
+	import { gameStore } from '@sudoku/stores/gameStore';
 	import { cursor } from '@sudoku/stores/cursor';
 	import { notes } from '@sudoku/stores/notes';
 	import { candidates } from '@sudoku/stores/candidates';
@@ -15,13 +15,14 @@
 				} else {
 					candidates.add($cursor, num);
 				}
-				userGrid.set($cursor, 0);
+				// 笔记模式下不清除 userGrid，但领域对象不管笔记，所以这里不调用 gameStore.guess
 			} else {
 				if ($candidates.hasOwnProperty($cursor.x + ',' + $cursor.y)) {
 					candidates.clear($cursor);
 				}
 
-				userGrid.set($cursor, num);
+				// 调用领域对象的 guess 方法
+				gameStore.guess($cursor, num);
 			}
 		}
 	}
